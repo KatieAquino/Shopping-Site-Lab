@@ -72,7 +72,8 @@ def show_shopping_cart():
     # - pass the total order cost and the list of Melon objects to the template
 
     if 'cart' not in session or session['cart'] == {}:
-        print("Your cart is empty.")
+        flash("Your cart is empty.")
+        return redirect('/melons') 
     
     else:
         cart_list = session['cart'].keys()
