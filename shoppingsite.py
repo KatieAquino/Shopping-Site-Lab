@@ -6,10 +6,12 @@ put melons in a shopping cart.
 Authors: Joel Burton, Christian Fernandez, Meggie Mahnken, Katie Byers.
 """
 
-from flask import Flask, render_template, redirect, flash, session
+from flask import Flask, render_template, redirect, flash, session, request
 import jinja2
 
 import melons
+
+import customers
 
 app = Flask(__name__)
 
@@ -150,6 +152,10 @@ def process_login():
     # The logic here should be something like:
     #
     # - get user-provided name and password from request.form
+
+    user_email = request.form.get('email')
+    user_password = request.form.get('password')
+    
     # - use customers.get_by_email() to retrieve corresponding Customer
     #   object (if any)
     # - if a Customer with that email was found, check the provided password
@@ -159,9 +165,20 @@ def process_login():
     # - if they don't, flash a failure message and redirect back to "/login"
     # - do the same if a Customer with that email doesn't exist
 
-    return "Oops! This needs to be implemented"
+    if user_email in customers.customer_info:
 
+        user = customers.get_by_email(user_email)
 
+        if user.password == user_password:
+            flash("Success!")
+            session['email'] = user_email
+            return redirect('/melons')
+        
+        
+    flash("Incorrect")
+    
+    return redirect('/login')
+    
 @app.route("/checkout")
 def checkout():
     """Checkout customer, process payment, and ship melons."""
