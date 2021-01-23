@@ -155,7 +155,7 @@ def process_login():
 
     user_email = request.form.get('email')
     user_password = request.form.get('password')
-    
+
     # - use customers.get_by_email() to retrieve corresponding Customer
     #   object (if any)
     # - if a Customer with that email was found, check the provided password
@@ -177,6 +177,14 @@ def process_login():
         
     flash("Incorrect")
     
+    return redirect('/login')
+
+@app.route('/logout')
+def process_logout():
+
+    del session['email']
+    flash("You have successfully logged out!")
+
     return redirect('/login')
     
 @app.route("/checkout")
